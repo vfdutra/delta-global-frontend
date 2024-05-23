@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Paper, Grid, Container, Typography, Input, Alert } from '@mui/material';
+
 import { getStudentById, updateStudent, createStudent } from '../../services/student';
+
+import { TextField, Button, Paper, Grid, Container, Typography, Input, Alert } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export function FormStudent({ studentId, onCancel, onUpdate }) {
   const [student, setStudent] = useState({
@@ -121,11 +124,19 @@ export function FormStudent({ studentId, onCancel, onUpdate }) {
               />
             </Grid>
             <Grid item xs={12}>
-              <Input
-                type="file"
-                onChange={handleImageChange}
-                inputProps={{ accept: 'image/*' }}
-              />
+              <Button
+                component="label"
+                variant="contained"
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload file
+                <Input
+                  type="file"
+                  onChange={handleImageChange}
+                  inputProps={{ accept: 'image/*' }}
+                  style={{ display: 'none' }}
+                />
+              </Button>
             </Grid>
             <Grid item xs={12}>
               {errors.photo && (
@@ -135,7 +146,7 @@ export function FormStudent({ studentId, onCancel, onUpdate }) {
             <Grid item xs={12}>
               <Button type="submit" variant="contained" color="primary" fullWidth>
                 Save Changes
-              </Button>              
+              </Button>
             </Grid>
             <Grid item xs={12}>
               <Button variant="contained" color="secondary" fullWidth onClick={onCancel}>

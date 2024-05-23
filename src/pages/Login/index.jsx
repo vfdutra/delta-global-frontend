@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { Typography, TextField, Button, Grid } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { StyledContainer, StyledPaper, StyledAvatar, StyledForm, StyledSubmitButton } from './style';
-
 import { login } from '../../services/auth';
 import { ErrorAlert } from '../../components/ErrorAlert';
+import { FormUser } from '../../components/FormUser';
 
 export function Login() {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [showRegister, setShowRegister] = useState(false); // Estado para alternar entre login e registro
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -31,7 +32,15 @@ export function Login() {
   };
 
   const handleCreateAccount = () => {
-    navigate('/register');
+    setShowRegister(true); 
+  };
+
+  const handleCancelRegister = () => {
+    setShowRegister(false); 
+  };
+
+  if (showRegister) {
+    return <FormUser onCancel={handleCancelRegister} />; // Exibe o formulário de registro
   }
 
   return (

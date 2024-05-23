@@ -8,12 +8,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import { getAllStudents, getStudentPhotoById, deleteStudent } from '../../services/student';
-
 import { FormStudent } from '../../components/FormStudent';
+
+import { StyledContainer, StyledTableCell, StyledTableRow, StyledButton, Header, Title, LogoutButton, NoStudentsMessage } from './style';
+import { IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 export function Home() {
   const [students, setStudents] = useState([]);
@@ -22,13 +25,17 @@ export function Home() {
   const navigate = useNavigate();
 
   const fetchStudentsWithPhotos = async () => {
-    const studentsData = await getAllStudents();
-    const studentsWithPhotos = await Promise.all(studentsData.map(async (student) => {
-      const photo = await getStudentPhotoById(student.id);
-      student.avatar = URL.createObjectURL(photo);
-      return student;
-    }));
-    setStudents(studentsWithPhotos);
+    try {
+      const studentsData = await getAllStudents();
+      const studentsWithPhotos = await Promise.all(studentsData.map(async (student) => {
+        const photo = await getStudentPhotoById(student.id);
+        student.avatar = URL.createObjectURL(photo);
+        return student;
+      }));
+      setStudents(studentsWithPhotos);
+    } catch (error) {
+      console.error('Failed to fetch students:', error);
+    }
   };
 
   useEffect(() => {
@@ -37,7 +44,7 @@ export function Home() {
 
   const handleEditStudent = (studentId) => {
     setEditingStudent(studentId);
-    setAddingStudent(false); 
+    setAddingStudent(false);
   };
 
   const handleAddStudent = () => {
@@ -59,8 +66,8 @@ export function Home() {
     setAddingStudent(false);
   };
 
-  const handleUpdate = () => {        
-    fetchStudentsWithPhotos();
+  const handleUpdate = async () => {
+    await fetchStudentsWithPhotos();
     setEditingStudent(null);
     setAddingStudent(false);
   };
@@ -71,20 +78,20 @@ export function Home() {
   }
 
   return (
-    <div>      
-    { !editingStudent && !addingStudent && 
+    <StyledContainer>
+      <Header>
+        <Title>Student Management</Title>
+        <LogoutButton variant="contained" onClick={logout}>
+          Logout
+        </LogoutButton>
+      </Header>
+
+      {!editingStudent && !addingStudent &&
         <Grid container spacing={2} alignItems="center">
           <Grid item xs>
-            <Button variant="contained" color="primary" onClick={handleAddStudent}>
+            <StyledButton variant="contained" color="primary" onClick={handleAddStudent}>
               Add Student
-            </Button>
-          </Grid>
-          <Grid item xs>
-            <Grid container justifyContent="flex-end">
-              <Button variant="contained" color="secondary" onClick={logout}>
-                Logout
-              </Button>
-            </Grid>
+            </StyledButton>
           </Grid>
         </Grid>
       }
@@ -94,47 +101,55 @@ export function Home() {
           onCancel={handleCancel}
           onUpdate={handleUpdate}
         />
-      ) : 
-      students.length == 0 ? (
-        <p>No students found</p>
       ) :
-      (        
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Avatar</TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>Address</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {students.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>
-                    <img 
-                      src={student.avatar} 
-                      alt={student.name} 
-                      style={{ width: 50, height: 50, borderRadius: '50%' }} 
-                    />
-                  </TableCell>
-                  <TableCell>{student.name}</TableCell>
-                  <TableCell>{student.email}</TableCell>
-                  <TableCell>{student.phone}</TableCell>
-                  <TableCell>{student.address}</TableCell>
-                  <TableCell>
-                    <Button onClick={() => handleEditStudent(student.id)}>Edit</Button>
-                    <Button onClick={() => handleDeleteStudent(student.id)}>Delete</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
-    </div>
+        students.length === 0 ? (
+          <NoStudentsMessage variant="h5">No students found</NoStudentsMessage>
+        ) :
+          (
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell>Avatar</StyledTableCell>
+                    <StyledTableCell>Name</StyledTableCell>
+                    <StyledTableCell>Email</StyledTableCell>
+                    <StyledTableCell>Phone</StyledTableCell>
+                    <StyledTableCell>Address</StyledTableCell>
+                    <StyledTableCell>Actions</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {students.map((student) => (
+                    <StyledTableRow key={student.id}>
+                      <TableCell>
+                        <img
+                          src={student.avatar}
+                          alt={student.name}
+                          style={{ width: 50, height: 50, borderRadius: '50%' }}
+                        />
+                      </TableCell>
+                      <TableCell>{student.name}</TableCell>
+                      <TableCell>{student.email}</TableCell>
+                      <TableCell>{student.phone}</TableCell>
+                      <TableCell>{student.address}</TableCell>
+                      <TableCell>
+                        <IconButton aria-label='edit' size='large'
+                          onClick={() => handleEditStudent(student.id)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton aria-label="delete" size="large"
+                          onClick={() => handleDeleteStudent(student.id)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </StyledTableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+    </StyledContainer>
   );
 }

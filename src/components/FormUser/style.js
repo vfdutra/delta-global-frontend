@@ -1,4 +1,4 @@
-import { styled } from '@mui/system';
+import { styled } from '@mui/material/styles';
 import { Container, Paper, Avatar, Button } from '@mui/material';
 
 export const StyledContainer = styled(Container)({
@@ -22,7 +22,7 @@ export const StyledAvatar = styled(Avatar)({
 });
 
 export const StyledForm = styled('form')({
-  width: '100%',
+  width: '100%', // Fix IE 11 issue.
   marginTop: '8px',
 });
 
