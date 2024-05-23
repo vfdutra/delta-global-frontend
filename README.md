@@ -22,3 +22,9 @@ Após o download do projeto:
 Execute o projeto com:
 
 `npm start`
+
+## Bibliotecas Utilizadas
+- React
+- Axios
+- Material UI
+- Styled Components
