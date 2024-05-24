@@ -52,6 +52,7 @@ export function Login() {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
+        { error && typeof error === 'string' && <ErrorAlert message={error} /> }
         <StyledForm onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
