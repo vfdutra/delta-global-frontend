@@ -28,3 +28,7 @@ Execute o projeto com:
 - Axios
 - Material UI
 - Styled Components
+
+## Versões
+- React 18^
+- Material UI 5^
