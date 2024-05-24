@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { getStudentById, updateStudent, createStudent } from '../../services/student';
 
-import { TextField, Button, Paper, Grid, Container, Typography, Input, Alert } from '@mui/material';
+import { TextField, Button, Paper, Grid, Container, Typography, Input, Alert, Box } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 export function FormStudent({ studentId, onCancel, onUpdate }) {
@@ -14,6 +14,7 @@ export function FormStudent({ studentId, onCancel, onUpdate }) {
   });
   const [image, setImage] = useState(null);
   const [errors, setErrors] = useState({});
+  const [imageName, setImageName] = useState('');
 
   useEffect(() => {
     if (studentId) {
@@ -39,7 +40,9 @@ export function FormStudent({ studentId, onCancel, onUpdate }) {
   };
 
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
+    const file = e.target.files[0];
+    setImage(file);
+    setImageName(file.name);
   };
 
   const handleSubmit = async (e) => {
@@ -64,7 +67,7 @@ export function FormStudent({ studentId, onCancel, onUpdate }) {
       onUpdate();
     } catch (error) {
       if (error.response && error.response.data) {
-        setErrors(error.response.data);
+        setErrors(error.response.data.errors);
       } else {
         setErrors({ general: 'An unexpected error occurred' });
       }
@@ -124,19 +127,26 @@ export function FormStudent({ studentId, onCancel, onUpdate }) {
               />
             </Grid>
             <Grid item xs={12}>
-              <Button
-                component="label"
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-              >
-                Upload file
-                <Input
-                  type="file"
-                  onChange={handleImageChange}
-                  inputProps={{ accept: 'image/*' }}
-                  style={{ display: 'none' }}
-                />
-              </Button>
+              <Box display="flex" alignItems="center">
+                <Button
+                  component="label"
+                  variant="contained"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  Upload file
+                  <Input
+                    type="file"
+                    onChange={handleImageChange}
+                    inputProps={{ accept: 'image/*' }}
+                    style={{ display: 'none' }}
+                  />
+                </Button>
+                {imageName && (
+                  <Typography variant="body2" style={{ color: '#757575', marginLeft: '8px' }}>
+                    {imageName}
+                  </Typography>
+                )}
+              </Box>
             </Grid>
             <Grid item xs={12}>
               {errors.photo && (

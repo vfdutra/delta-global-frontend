@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Login } from './pages/Login/index';
 import { Home } from './pages/Home/index';
 
+import { PrivateRoute } from './components/PrivateRoute/index';
+
 import { GlobalStyle } from './style/style';
 
 export function App() {
@@ -12,7 +14,7 @@ export function App() {
       <GlobalStyle />
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<PrivateRoute element={<Home />} />} />
       </Routes>
     </Router>
   );

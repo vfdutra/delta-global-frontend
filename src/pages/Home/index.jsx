@@ -16,6 +16,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useFetchStudentsWithPhotos } from '../../hooks/useFetchStudentsWithPhotos';
 import { deleteStudent } from '../../services/student';
 import { FormStudent } from '../../components/FormStudent';
+import { DeleteDialog } from '../../components/DeleteDialog';
 import { StyledContainer, StyledTableCell, StyledTableRow, StyledButton, Header, Title, LogoutButton, NoStudentsMessage } from './style';
 
 export function Home() {
@@ -23,6 +24,8 @@ export function Home() {
   const [editingStudent, setEditingStudent] = useState(null);
   const [addingStudent, setAddingStudent] = useState(false);
   const [isPageLoaded, setIsPageLoaded] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [studentToDelete, setStudentToDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -80,6 +83,23 @@ export function Home() {
     localStorage.removeItem('token');
     navigate('/');
   }, [navigate]);
+
+  const openDeleteConfirm = (studentId) => {
+    setStudentToDelete(studentId);
+    setDeleteConfirmOpen(true);
+  };
+
+  const closeDeleteConfirm = () => {
+    setStudentToDelete(null);
+    setDeleteConfirmOpen(false);
+  };
+
+  const confirmDeleteStudent = () => {
+    if (studentToDelete) {
+      handleDeleteStudent(studentToDelete);
+      closeDeleteConfirm();
+    }
+  };
 
   return (
     <StyledContainer>
@@ -146,7 +166,7 @@ export function Home() {
                       <EditIcon />
                     </IconButton>
                     <IconButton aria-label="delete" size="large"
-                      onClick={() => handleDeleteStudent(student.id)}
+                      onClick={() => openDeleteConfirm(student.id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -157,6 +177,12 @@ export function Home() {
           </Table>
         </TableContainer>
       )}
+
+      <DeleteDialog
+        open={deleteConfirmOpen}
+        onClose={closeDeleteConfirm}
+        onConfirm={confirmDeleteStudent}
+      />
     </StyledContainer>
   );
 }

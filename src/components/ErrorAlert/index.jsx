@@ -1,14 +1,14 @@
 import React from 'react';
 import { Alert } from '@mui/material';
 
-export const ErrorAlert = ({ error }) => {
-  if (!error) return null;
+export const ErrorAlert = ({ message }) => {
+  if (!message) return null;
 
-  const isObject = typeof error === 'object' && error !== null;
+  const isObject = typeof message === 'object' && message !== null;
 
   return (
     <Alert severity="error" variant={isObject ? 'filled' : 'standard'}>
-      {isObject ? error.message : error}
+      {isObject ? message.message : message}
     </Alert>
   );
 };

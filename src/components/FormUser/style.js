@@ -22,7 +22,7 @@ export const StyledAvatar = styled(Avatar)({
 });
 
 export const StyledForm = styled('form')({
-  width: '100%', // Fix IE 11 issue.
+  width: '100%',
   marginTop: '8px',
 });
 

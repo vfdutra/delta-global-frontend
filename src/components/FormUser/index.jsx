@@ -7,7 +7,7 @@ import { StyledContainer, StyledPaper, StyledAvatar, StyledForm, StyledSubmitBut
 
 export function FormUser({ onCancel }) {
   const [registerData, setRegisterData] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
+  const [error, setError] = useState({});
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,9 +23,9 @@ export function FormUser({ onCancel }) {
     try {
       await register(registerData);
       navigate('/home');
-    } catch (error) {
-      if (error.response && error.response.data) {
-        setError(error.response.data.message);
+    } catch (errors) {
+      if (errors.response && errors.response.data) {
+        setError(errors.response.data.message);
       } else {
         setError({ general: 'An unexpected error occurred' });
       }

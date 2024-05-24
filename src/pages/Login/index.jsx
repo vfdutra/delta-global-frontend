@@ -10,7 +10,7 @@ import { FormUser } from '../../components/FormUser';
 export function Login() {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
-  const [showRegister, setShowRegister] = useState(false); // Estado para alternar entre login e registro
+  const [showRegister, setShowRegister] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -26,8 +26,8 @@ export function Login() {
     try {
       await login(loginData);
       navigate('/home');
-    } catch (error) {
-      setError(error.response.data.message);
+    } catch (errorMessage) {
+      setError(errorMessage.response.data.message);
     }
   };
 
@@ -40,7 +40,7 @@ export function Login() {
   };
 
   if (showRegister) {
-    return <FormUser onCancel={handleCancelRegister} />; // Exibe o formulário de registro
+    return <FormUser onCancel={handleCancelRegister} />;
   }
 
   return (
@@ -52,7 +52,6 @@ export function Login() {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
-        <ErrorAlert error={error} />
         <StyledForm onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
@@ -66,6 +65,8 @@ export function Login() {
             autoFocus
             value={loginData.email}
             onChange={handleChange}
+            error={!!error.email}
+            helperText={error.email}
           />
           <TextField
             variant="outlined"
@@ -79,6 +80,8 @@ export function Login() {
             autoComplete="current-password"
             value={loginData.password}
             onChange={handleChange}
+            error={!!error.password}
+            helperText={error.password}
           />
           <StyledSubmitButton
             type="submit"
